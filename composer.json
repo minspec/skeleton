@@ -1,8 +1,21 @@
 {
     "name": "minspec/skeleton",
-    "description": "MinSpec Skeleton",
+    "description": "Minimal MinSpec project skeleton built on the Symfony Docker / FrankenPHP runtime baseline.",
     "type": "project",
     "license": "Apache-2.0",
+    "keywords": [
+        "minspec",
+        "skeleton",
+        "symfony",
+        "frankenphp",
+        "caddy",
+        "composer-project"
+    ],
+    "homepage": "https://github.com/minspec/skeleton",
+    "support": {
+        "issues": "https://github.com/minspec/skeleton/issues",
+        "source": "https://github.com/minspec/skeleton"
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
