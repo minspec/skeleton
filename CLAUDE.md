@@ -1,511 +1,108 @@
-# CLAUDE.md
+@AGENTS.md
 
-## Purpose
+# Claude Code Adapter for MinSpec Skeleton
 
-This file defines Claude Code-specific operating rules for the `minspec/skeleton` repository.
+This file intentionally imports `AGENTS.md` as the repository source of truth.
 
-It sits beside `AGENTS.md`.
+Do not duplicate, reinterpret, or weaken the root agent doctrine here. This file exists only to adapt Claude Code behavior to the repository’s existing agent instructions.
 
-`AGENTS.md` is the agent-neutral repository policy.
-`CLAUDE.md` is the Claude Code execution guide.
+## Claude Code Role
 
-When this file and `AGENTS.md` overlap, follow the stricter rule.
+Claude Code may help inspect, plan, review, and make bounded repository changes when explicitly requested.
 
-This file is not marketing copy.
-This file is not a public contribution guide.
-This file is not a general MinSpec doctrine document.
+Treat this repository as the minimal MinSpec skeleton. Preserve its role as a clean Symfony runtime baseline, not a full application starter, package composition layer, Workbench implementation, or Mate/MCP implementation.
 
-It exists to keep Claude-assisted work bounded, inspectable, source-controlled, and aligned with the purpose of this package.
+## Instruction Precedence
 
-## Repository Identity
+Use this precedence order:
 
-- Repository: `minspec/skeleton`
-- Package identity: MinSpec Skeleton
-- Default branch: `master`
-- Project type: minimal Symfony application skeleton
-- Status: founder-controlled incubation
-- Authority: the human maintainer is the final decision-maker
+1. System, safety, and platform instructions.
+2. Root `AGENTS.md`.
+3. This `CLAUDE.md` adapter.
+4. The current user request.
+5. Claude auto memory or prior conversation context.
 
-MinSpec is an independent, unofficial Symfony-oriented project.
+If any instruction conflicts with root `AGENTS.md`, stop and surface the conflict instead of guessing.
 
-Claude MUST NOT imply official Symfony affiliation, endorsement, ownership, or governance.
+Claude auto memory is useful context, not repository authority. If memory contradicts files in this repository, trust the repository.
 
-## Claude's Role
+## Required Operating Pattern
 
-Claude may assist with:
+Before making nontrivial changes:
 
-- repository inspection
-- documentation edits
-- metadata edits
-- small source changes when explicitly requested
-- risk review
-- diff review
-- prompt construction for other tools
-- validation planning
-- concise task decomposition
+1. Inspect the repository state.
+2. Read `AGENTS.md`.
+3. Read the files directly relevant to the task.
+4. Check the current branch and working tree state.
+5. Identify the exact files that may change.
+6. Keep the change PR-sized.
 
-Claude does not own:
+Do not edit first and explain later.
 
-- project direction
-- package doctrine
-- commit decisions
-- release decisions
-- dependency decisions
-- merge decisions
-- branch protection
-- package registry configuration
-- public positioning
+## Repository Safety Rules
 
-Claude assists.
-The maintainer decides.
+Do not run package installs, Composer updates, Symfony commands, Docker builds, build commands, test commands, asset compilation, generators, or artifact-producing commands unless the user explicitly authorizes them for the current task.
 
-## Primary Operating Posture
+Do not stage, commit, push, merge, tag, release, or alter branch protection unless the user explicitly requests that action.
 
-Claude must work as a bounded repository-maintenance assistant.
+Do not modify dependencies, lock files, CI workflows, release configuration, package metadata, Docker/runtime configuration, or security-sensitive files unless explicitly requested.
 
-Default behavior:
+Do not introduce generated files, local cache files, IDE artifacts, build outputs, or dependency directories into the repository.
 
-- inspect first
-- edit second
-- keep scope narrow
-- avoid speculative architecture
-- avoid broad refactors
-- avoid dependency changes
-- avoid artifact generation
-- report uncertainty early
-- preserve package minimalism
-- preserve maintainer control
+If existing uncommitted changes appear in files you would touch, stop and report them before editing.
 
-For non-trivial work, Claude should first state:
+## MinSpec Skeleton Boundary
 
-- understood scope
-- likely files involved
-- commands needed, if any
-- risks or ambiguities
+Preserve this repository as a minimal skeleton.
 
-Do not perform broad autonomous changes without explicit instruction.
+Do not add by default:
 
-## What This Repository Is
+- database requirements
+- default application UX
+- dashboard UI
+- Workbench implementation
+- Mate/MCP implementation
+- package composition machinery
+- recipe behavior that belongs in a recipes repository
+- broad framework doctrine that belongs in organization-level docs
 
-`minspec/skeleton` is the minimal baseline for MinSpec-compatible Symfony projects.
+Higher-level capabilities should remain install-driven, package-driven, or repository-specific unless the user explicitly asks to add them here.
 
-Its purpose is to provide a small, clean, understandable starting point that can boot reliably and support deliberate package-first composition.
+## Branch and PR Discipline
 
-This repository may contain:
+MinSpec repositories may use `master`. Do not assume `main`.
 
-- minimal Symfony application baseline
-- Composer package metadata
-- Symfony Docker / FrankenPHP / Caddy runtime baseline, if already present
-- Mercure/Vulcain runtime support only when already part of the selected runtime baseline
-- README, license, and basic package documentation directly relevant to this skeleton
-- minimal configuration required for the skeleton to boot and remain understandable
+Confirm the current branch before branch-sensitive guidance.
 
-The skeleton should remain small, boring, and dependable.
+Prepare changes for pull request review. Do not treat local edits as final merged work.
 
-## What This Repository Is Not
-
-This repository MUST NOT become:
-
-- Workbench
-- dashboard
-- UI component system
-- Symfony Mate extension
-- MCP server package
-- full starter application
-- admin panel
-- database-backed application
-- Doctrine-heavy application
-- JavaScript build-system showcase
-- Tailwind, Flowbite, or demo UX package
-- generalized MinSpec governance repository
-- documentation hub for the whole MinSpec ecosystem
-- AI tooling laboratory
-- SaaS product surface
-- broad software-factory platform
-
-If a requested change belongs in another package, Claude must say so instead of forcing it into the skeleton.
-
-## Maintainer and Contribution Model
-
-This repository is founder-controlled during incubation.
-
-Claude MUST assume:
-
-- the maintainer is the only approved contributor unless explicitly stated otherwise
-- unsolicited third-party code contribution is not part of the workflow
-- all meaningful changes require human review
-- no agent may approve, merge, release, tag, or publish anything
-- AI assistance does not transfer authority from the maintainer to the tool
-
-Do not write contribution language implying that outside pull requests are generally welcome.
-
-Use maintainer-assistance language, not community-governance language.
-
-## Hard Prohibitions
-
-Claude MUST NOT include, revive, or reference:
-
-- retired predecessor namespaces
-- retired project names
-- non-MinSpec branding
-- migration history
-- old repository ownership history
-- generalized Workbench doctrine
-- Symfony Mate/MCP doctrine inside this skeleton
-- SaaS doctrine
-- unrelated project doctrine
-- semantic theory or research doctrine
-- generic AI hype
-- broad “software factory” positioning
-
-Claude MUST NOT make public claims that exceed what this package actually does.
-
-## Scope Control
-
-Claude MUST keep each task PR-sized.
-
-Claude MUST NOT silently broaden the task.
-
-Examples of scope drift to avoid:
-
-- turning a README edit into a package architecture rewrite
-- adding docs for future packages inside this repository
-- adding dependencies to make an example work
-- creating demo controllers or landing pages without explicit instruction
-- changing Docker/runtime behavior while editing documentation
-- changing Composer metadata while editing prose
-- inventing new MinSpec doctrine to make wording sound complete
-
-When scope pressure appears, Claude must stop and identify the boundary.
-
-## Source and Supply-Chain Policy
-
-Code provenance matters.
-
-Acceptable sources for code patterns are limited to:
-
-- official upstream documentation
-- official upstream repositories
-- existing code already present in this repository
-- approved MinSpec repositories
-- explicit maintainer-provided instructions
-
-Claude MUST NOT:
-
-- paste third-party code from blogs, tutorials, Stack Overflow, random GitHub repositories, or unapproved snippets
-- add packages casually
-- add Composer plugins casually
-- add GitHub Actions casually
-- add Docker images casually
-- add remote scripts casually
-- add external templates casually
-- add generated code from uncontrolled sources
-
-Any change to dependencies, Composer plugins, Docker images, GitHub Actions, external tools, or package metadata is high-risk and requires explicit maintainer approval.
-
-Treat supply-chain changes as security-sensitive even when they appear routine.
-
-## Command Policy
-
-Claude must avoid commands that mutate the repository unless explicitly approved.
-
-### Allowed Read-Only Inspection Commands
-
-When inspection is requested, Claude may use or recommend commands such as:
-
-```bash
-git status --short
-git branch --show-current
-git diff --stat
-git diff
-git ls-files
-find . -maxdepth 3 -type f
-```
-
-Claude may use:
-
-```bash
-composer validate --strict
-```
-
-only if Composer is already available and the command will not install, update, or generate dependencies.
-
-### Commands Requiring Explicit Permission
-
-Claude MUST NOT run these without explicit maintainer permission:
-
-```bash
-composer install
-composer update
-composer require
-composer remove
-npm install
-yarn
-pnpm
-docker compose build
-docker compose up
-```
-
-Claude also MUST NOT run, without explicit permission:
-
-- Symfony console commands that generate files
-- Symfony console commands that mutate cache/state
-- commands that write to `vendor/`
-- commands that write to `node_modules/`
-- commands that write to `var/`
-- commands that write to `public/build/`
-- commands that update lock files
-- commands that generate assets
-- commands that create runtime artifacts
-- commands that alter Git state
-
-If unsure whether a command mutates the repository, do not run it.
-
-## Git Policy
-
-Claude MUST NOT:
-
-- stage files
-- commit changes
-- push changes
-- create branches
-- delete branches
-- tag releases
-- open pull requests
-- merge pull requests
-- modify remotes
-- rewrite history
-
-unless explicitly instructed.
-
-Before editing, Claude should check or request:
-
-```bash
-git status --short
-git branch --show-current
-```
-
-After editing, Claude must report:
+When finishing a change, report:
 
 - files changed
-- summary of changes
-- validation performed
-- validation skipped
-- remaining risks
-- suggested next step
+- what changed
+- verification performed
+- verification intentionally skipped
+- risks or follow-up needed
+- suggested PR title and summary when useful
 
-Claude MUST NOT claim the repository is clean unless `git status --short` was checked.
+## Language and Doctrine Hygiene
 
-Claude MUST NOT claim validation was performed unless it actually was.
+Use current MinSpec terminology only.
 
-Claude MUST NOT claim work is ready for release, Packagist, production, or merge without explicit evidence.
+Do not revive old retired namespace language. If old retired namespace language is found in the repository, flag it as a cleanup issue rather than repeating it casually.
 
-## File and Documentation Policy
+Do not invent new doctrine while performing maintenance. If a requested change seems to require new doctrine, surface that as a decision point.
 
-Keep this repository minimal and package-specific.
+## Claude-Specific Behavior
 
-Claude MUST:
+Use concise plans for multi-step work.
 
-- keep root package files accurate
-- keep README content limited to what the skeleton actually provides
-- keep Composer metadata package-specific
-- keep Docker/runtime files close to the selected upstream runtime baseline unless deviation is explicitly requested
-- preserve precise Symfony-native terminology
-- preserve the package identity `minspec/skeleton`
-- preserve root `AGENTS.md` as the agent-neutral policy file
-- preserve this `CLAUDE.md` as Claude-specific execution guidance
+Prefer file reads, diffs, and source inspection over execution.
 
-Claude MUST NOT add:
+Prefer narrow edits over broad rewrites.
 
-- demo controllers
-- demo pages
-- UI kits
-- example databases
-- sample admin panels
-- illustrative application features
-- broad documentation trees
-- ecosystem-wide doctrine
-- unrelated project roadmaps
-- speculative architecture documents
+Do not rely on hidden assumptions. If repository state is unknown, inspect it.
 
-Documentation in this repository should explain the skeleton, not the entire MinSpec universe.
+If asked to perform a review, return a severity-ordered finding list and a clear verdict.
 
-## Naming and Wording
-
-Use:
-
-- `MinSpec`
-- `minspec/skeleton`
-- `MinSpec Skeleton`
-- minimal Symfony skeleton
-- baseline
-- runtime/framework shell
-- starting point
-
-Avoid inflated or misleading terms such as:
-
-- platform
-- operating system
-- autonomous factory
-- universal framework
-- complete solution
-- AI-native application platform
-- production-ready application stack
-
-Do not imply that this skeleton includes capabilities that belong to future packages or separate repositories.
-
-## Symfony Positioning
-
-MinSpec is independent and unofficial.
-
-Claude MUST use wording that respects Symfony as upstream technology without implying affiliation.
-
-Acceptable wording:
-
-- “Symfony application skeleton”
-- “built on Symfony components”
-- “Symfony-oriented”
-- “compatible with Symfony project structure”
-
-Avoid wording that implies:
-
-- Symfony project ownership
-- Symfony core endorsement
-- official Symfony governance
-- official Symfony distribution status
-
-## Dependency and Runtime Discipline
-
-The skeleton must not accumulate dependencies merely because they are common in starter templates.
-
-Claude MUST NOT add or suggest adding dependencies unless the task explicitly requires it.
-
-Avoid introducing:
-
-- Doctrine by default
-- frontend build systems by default
-- UX/demo packages by default
-- admin bundles by default
-- testing frameworks by default unless explicitly requested
-- AI/MCP tooling by default
-- Workbench-specific tooling by default
-
-Runtime files should remain understandable and close to the chosen baseline.
-
-Any deviation from upstream runtime patterns must be explicit and justified.
-
-## Validation Expectations
-
-Validation must match the task.
-
-For documentation-only changes, useful validation may include:
-
-- reviewing the diff
-- checking changed Markdown for obvious formatting errors
-- checking links only when relevant and feasible
-- confirming no unrelated files changed
-
-For Composer metadata changes, useful validation may include:
-
-```bash
-composer validate --strict
-```
-
-if safe and available.
-
-For runtime or application changes, validation must be proposed before execution if it may generate artifacts.
-
-Claude MUST state clearly when validation was skipped and why.
-
-Never substitute confidence for validation.
-
-## Claude Response Style
-
-Claude should be direct, factual, and bounded.
-
-Prefer:
-
-- clear findings
-- exact file paths
-- explicit assumptions
-- concise risk notes
-- small next steps
-- copy-pasteable snippets when requested
-
-Avoid:
-
-- hype
-- motivational filler
-- performative reassurance
-- broad philosophical framing
-- unrequested alternatives
-- excessive ceremony
-- pretending uncertainty does not exist
-
-When the maintainer asks for file content, provide clean fenced output.
-
-When the maintainer asks for review, separate:
-
-- facts
-- assumptions
-- risks
-- recommendations
-
-## Escalation Rules
-
-Stop and ask the maintainer before proceeding when:
-
-- the requested change conflicts with this file
-- the requested change conflicts with `AGENTS.md`
-- the requested change would make the skeleton less minimal
-- the change appears to belong in another package
-- dependency changes are needed
-- runtime baseline changes are needed
-- lock files would change
-- generated files would be created
-- external source material is needed
-- licensing would be affected
-- branch, release, registry, or CI settings would be affected
-- repository history or naming history would be mentioned
-- the task requires guessing project doctrine
-
-When in doubt, preserve the skeleton and ask.
-
-## Recommended Task Report Format
-
-For non-trivial tasks, use this structure.
-
-Before editing:
-
-```text
-Scope understood:
-Files likely to change:
-Commands planned:
-Risks or ambiguities:
-```
-
-After editing:
-
-```text
-Files changed:
-What changed:
-Validation performed:
-Validation skipped:
-Remaining risks:
-Suggested next step:
-```
-
-Keep reports concise and factual.
-
-## Final Operating Summary
-
-`minspec/skeleton` is a minimal Symfony skeleton for MinSpec-compatible projects.
-
-Keep it small.
-Keep it accurate.
-Keep it source-controlled.
-Keep it package-specific.
-Keep it human-reviewed.
-
-Claude assists.
-The maintainer decides.
+If asked to make a change, make only the requested change and report the exact diff-relevant outcome.
