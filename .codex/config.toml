@@ -1,0 +1,92 @@
+# .codex/config.toml
+#
+# Portable project-scoped Codex config for minspec/skeleton.
+# Keep secrets, auth, provider routing, profiles, telemetry, and machine-local paths
+# in ~/.codex/config.toml, not in this repository.
+
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+
+# Strong enough for repo edits and doctrine-sensitive review without using
+# experimental maximum reasoning by default.
+model_reasoning_effort = "high"
+model_reasoning_summary = "concise"
+model_verbosity = "medium"
+
+# Skeleton is trust-sensitive: allow workspace edits, but require approval before
+# untrusted commands. AGENTS.md remains the primary source of behavioral rules.
+approval_policy = "untrusted"
+approvals_reviewer = "user"
+sandbox_mode = "workspace-write"
+
+# Cached web search is allowed only as a constrained reference surface.
+# Shell command network access remains disabled below.
+web_search = "cached"
+
+# Prefer root AGENTS.md. CLAUDE.md is only a fallback if AGENTS.md is absent.
+project_doc_fallback_filenames = ["CLAUDE.md"]
+project_doc_max_bytes = 65536
+project_root_markers = ["composer.json", "AGENTS.md"]
+
+# Reduce shell surprise and avoid login-profile side effects.
+allow_login_shell = false
+
+[sandbox_workspace_write]
+network_access = false
+writable_roots = []
+exclude_slash_tmp = true
+exclude_tmpdir_env_var = true
+
+[features]
+# Avoid accidental MCP/tool dependency installs in the skeleton repo.
+skill_mcp_dependency_install = false
+
+# Keep the skeleton workflow bounded. Re-enable per session if a task truly needs it.
+multi_agent = false
+
+# Useful safety net for local agent edits.
+undo = true
+
+# Leave shell tooling on; AGENTS.md and approval_policy control command use.
+shell_tool = true
+shell_snapshot = true
+
+[tools]
+view_image = false
+web_search = { context_size = "low", allowed_domains = [
+  "developers.openai.com",
+  "symfony.com",
+  "getcomposer.org",
+  "packagist.org",
+  "github.com"
+] }
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+experimental_use_profile = false
+exclude = [
+  "*KEY*",
+  "*TOKEN*",
+  "*SECRET*",
+  "*PASSWORD*",
+  "OPENAI_*",
+  "ANTHROPIC_*",
+  "GOOGLE_*",
+  "GITHUB_TOKEN",
+  "GH_TOKEN",
+  "PACKAGIST_TOKEN",
+  "COMPOSER_AUTH"
+]
+
+[tui]
+alternate_screen = "auto"
+show_tooltips = false
+terminal_title = ["spinner", "project"]
+
+# Native Windows only:
+# If you run Codex natively on Windows and have the elevated sandbox configured,
+# uncomment this table. Leave it commented for WSL/Linux/Chromebook.
+#
+# [windows]
+# sandbox = "elevated"
