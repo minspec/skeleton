@@ -248,7 +248,17 @@ MinSpec focuses on application architecture, package boundaries, and AI-safe dev
 
 This repository is public for visibility, review, reproducible feedback, and source-of-truth development.
 
-During incubation, source mutation authority remains deliberately restricted. Issues, security reports, reproducible bug reports, and design feedback may be useful. Unsolicited code pull requests are not part of the accepted contribution path during incubation.
+Public visibility does not imply public governance, public write access, or an open contribution process. During incubation, source mutation authority remains deliberately restricted to the maintainer and explicitly trusted collaborators.
+
+Pull requests are enabled but restricted to collaborators only. Only users with repository write, maintain, or admin access may open pull requests.
+
+Collaborator PR access is an operational mechanism for trusted maintainers and approved collaborators. It is not a public contribution path.
+
+Issues, security reports, reproducible bug reports, documentation clarity suggestions, and design feedback may be useful where intentionally enabled. Opening an issue or providing feedback does not grant contribution authority, source authority, maintainer status, or approval to submit code changes.
+
+Unsolicited external PRs are not part of the accepted source path during incubation.
+
+AI agents, GitHub Apps, bots, automation, Dependabot, Copilot agents, browser agents, and external tools are not maintainers and do not gain source authority from collaborator-only PR settings.
 
 ---
 
