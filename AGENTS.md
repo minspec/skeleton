@@ -1,15 +1,14 @@
 # AGENTS.md
 
-## Purpose
+This repository is `minspec/skeleton`.
 
-This file defines operating rules for Codex and other local coding agents working inside the `minspec/skeleton` repository.
+## Repository role
 
-It is not marketing copy.
-It is not a public contribution guide.
-It is not a general MinSpec doctrine document.
+`minspec/skeleton` is the pure Composer/Flex Symfony application skeleton for MinSpec projects.
 
-This file exists to keep agent-assisted work bounded, reviewable, source-controlled, and aligned with the purpose of this package.
+It is not the Docker runtime repository. Docker Compose, Dockerfiles, Caddy/FrankenPHP configuration, docker-entrypoint scripts, and first-run Docker bootstrap behavior belong in `minspec/docker`.
 
+## Hard boundaries
 Agents may assist the maintainer.
 Agents do not decide project direction.
 Agents do not control Git.
@@ -47,65 +46,67 @@ However, explicit maintainer instruction does not imply permission to perform Gi
 A request such as “prepare a PR” means prepare local changes and PR text for human review.
 It does not mean create the pull request.
 
-## Repository Identity
+Do not add Docker artifacts to this repository:
 
-- Repository: `minspec/skeleton`
-- Package identity: MinSpec Skeleton
-- Default branch: `master`
-- Project type: minimal Symfony application skeleton
-- Status: founder-controlled incubation
-- Authority: the human maintainer is the final decision-maker
+- no `compose.yaml`
+- no `compose.override.yaml`
+- no `compose.prod.yaml`
+- no `Dockerfile`
+- no `Caddyfile`
+- no `frankenphp/`
+- no Docker entrypoint scripts
 
-MinSpec is an independent, unofficial Symfony-oriented project.
+Do not add generated Symfony application files to this repository unless explicitly requested:
 
-Agents MUST NOT imply official Symfony affiliation, endorsement, ownership, or governance.
+- no committed `.env`
+- no committed `bin/`
+- no committed `config/`
+- no committed `public/`
+- no committed `src/`
+- no committed `tests/`
+- no committed `composer.lock`
+- no committed `symfony.lock`
 
-## What This Repository Is
+This repository should remain a Composer/Flex seed.
 
-`minspec/skeleton` is the minimal baseline for MinSpec-compatible Symfony projects.
+## Allowed work
 
-Its job is to provide a small, clean, understandable starting point that can boot reliably and serve as a foundation for deliberate package-first composition.
+Appropriate changes include:
 
-This repository may contain:
+- `composer.json` metadata and dependency constraints
+- README / documentation
+- repository policy files
+- source-control hygiene files
+- Packagist-facing metadata
+- MinSpec skeleton doctrine
 
-- minimal Symfony application baseline
-- Composer package metadata
-- Symfony Docker / FrankenPHP / Caddy runtime baseline, if already present
-- Mercure/Vulcain runtime support only when already part of the selected runtime baseline
-- README, license, and basic package documentation directly relevant to this skeleton
-- minimal configuration required for the skeleton to boot and remain understandable
+## Testing discipline
 
-The skeleton should stay boring, small, and dependable.
+Do not generate local install/build/runtime artifacts inside this repository while making source edits.
 
-## What This Repository Is Not
+To test `composer create-project`, use a scratch directory outside the repository, for example:
 
-This repository MUST NOT grow into:
+```bash
+mkdir -p ~/projects/_scratch
+cd ~/projects/_scratch
+rm -rf minspec-skeleton-test
+composer create-project minspec/skeleton minspec-skeleton-test --prefer-dist
+```
 
-- Workbench
-- dashboard
-- UI component system
-- Symfony Mate extension
-- MCP server package
-- full starter application
-- admin panel
-- database-backed application
-- Doctrine-heavy application
-- JavaScript build-system showcase
-- Tailwind, Flowbite, or demo UX package
-- generalized MinSpec governance repository
-- documentation hub for the whole MinSpec ecosystem
-- AI tooling laboratory
-- SaaS product surface
-- broad software-factory platform
+Inspect results there, not inside this repository.
 
-If a requested change belongs in another package, say so clearly instead of forcing it into the skeleton.
+## Source-of-truth discipline
 
-## Maintainer and Contribution Model
+Make changes through pull requests. Keep changes small and reviewable.
 
-This repository is founder-controlled during incubation.
+Before proposing edits, classify the file or behavior as one of:
 
-Agents MUST assume:
+- Composer/Flex skeleton seed
+- generated Symfony application output
+- Docker/runtime bootstrap
+- repository governance/docs
 
+Only modify the layer that owns the behavior.
 - the maintainer is the only approved contributor unless explicitly stated otherwise
 - unsolicited third-party code contribution is not part of the workflow
 - human review is mandatory
