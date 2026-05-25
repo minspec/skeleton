@@ -12,6 +12,40 @@ This file exists to keep agent-assisted work bounded, reviewable, source-control
 
 Agents may assist the maintainer.
 Agents do not decide project direction.
+Agents do not control Git.
+Agents do not control GitHub.
+Agents do not create pull requests.
+Agents do not mutate repository authority.
+
+## Instruction Precedence
+
+These instructions apply to:
+
+- Codex CLI
+- Codex VS Code extension
+- Claude Code
+- Claude Desktop / Claude agent workflows
+- Gemini agent workflows
+- Cursor
+- Copilot
+- local MCP-enabled agents
+- any other coding, review, or repository-maintenance agent operating in this repository
+
+Tool-specific instruction files such as `.codex/config.toml`, `.codex/AGENTS.md`, `.claude/CLAUDE.md`, skills, prompts, or MCP instructions may add stricter rules.
+
+They MUST NOT weaken this file.
+
+If instructions conflict, follow this order:
+
+1. explicit maintainer instruction for the current task
+2. this `AGENTS.md`
+3. tool-specific instruction files
+4. general model behavior or defaults
+
+However, explicit maintainer instruction does not imply permission to perform GitHub-visible actions unless the maintainer specifically names the exact action.
+
+A request such as “prepare a PR” means prepare local changes and PR text for human review.
+It does not mean create the pull request.
 
 ## Repository Identity
 
@@ -75,7 +109,9 @@ Agents MUST assume:
 - the maintainer is the only approved contributor unless explicitly stated otherwise
 - unsolicited third-party code contribution is not part of the workflow
 - human review is mandatory
-- no agent may approve, merge, release, tag, or publish anything
+- no agent may approve, merge, release, tag, publish, or create pull requests
+- no agent may open, close, label, edit, assign, or comment on GitHub issues
+- no agent may change repository settings, permissions, protections, secrets, or workflows
 - AI assistance does not transfer authority from the maintainer to the tool
 
 Do not write contribution language implying that outside pull requests are generally welcome.
@@ -92,7 +128,7 @@ Agents MUST preserve these principles:
 - Higher-level capabilities belong in installable packages, recipes, adapters, Workbench, or project-level decisions.
 - Deterministic install-time wiring is preferred over hidden magic.
 - Source-of-truth discipline matters.
-- AI may assist development, but AI does not own doctrine, commits, releases, or merge authority.
+- AI may assist development, but AI does not own doctrine, commits, releases, pull requests, issues, merge authority, or repository governance.
 
 Do not expand this file into a full doctrine manifesto.
 
@@ -111,6 +147,7 @@ Agents MUST:
 - distinguish facts from assumptions
 - preserve existing repository patterns unless explicitly asked to change them
 - stop when a task conflicts with this file or the package purpose
+- treat GitHub, Git history, issues, pull requests, releases, and repository settings as human-controlled surfaces
 
 Agents MUST NOT:
 
@@ -122,8 +159,10 @@ Agents MUST NOT:
 - update lock files unless explicitly requested
 - generate local build/runtime artifacts unless explicitly requested
 - change licensing unless explicitly requested
-- alter release, registry, or branch-policy assumptions without explicit instruction
+- alter release, registry, branch-policy, or GitHub assumptions without explicit instruction
 - normalize agent autonomy over human review
+- use GitHub as an action surface
+- treat issue or PR operations as routine agent work
 
 ## Hard Prohibitions
 
@@ -171,35 +210,101 @@ Any change to dependencies, Composer plugins, Docker images, GitHub Actions, ext
 
 Treat supply-chain changes as security-sensitive even when they appear routine.
 
+## Secret, Credential, and Authority Boundary
+
+Agents MUST NOT inspect, print, copy, modify, or rely on secrets or credentials.
+
+Agents MUST NOT read or expose:
+
+- GitHub tokens
+- Packagist tokens
+- Composer auth files
+- SSH private keys
+- `.env.local`
+- `.env.*.local`
+- `auth.json`
+- `.npmrc` tokens
+- `~/.ssh`
+- `~/.git-credentials`
+- `~/.config/gh`
+- `~/.codex`
+- `~/.claude`
+- shell history
+- credential helper output
+- environment variables likely to contain secrets
+
+Agents MUST NOT ask the maintainer to paste secrets into chat.
+
+Agents MUST NOT use credentials to perform repository actions.
+
+If a task appears to require credentials, stop and explain that the human maintainer must perform that step.
+
 ## Command Policy
 
 Agents may recommend commands, but MUST distinguish recommended commands from commands actually run.
+
+Agents MUST prefer read-only inspection commands.
+
+Agents MUST NOT run commands that:
+
+- mutate Git state
+- mutate GitHub state
+- create pull requests
+- create, edit, comment on, close, label, assign, or milestone issues
+- push branches
+- create tags
+- create releases
+- change branch protection
+- change repository settings
+- change GitHub Actions configuration
+- change repository secrets or variables
+- install dependencies
+- generate runtime artifacts
+- mutate cache/build/vendor directories
+- contact remote services for write operations
+
+If unsure whether a command mutates state, do not run it.
 
 ### Low-Risk Inspection Commands
 
 When explicitly asked to inspect, agents may run read-only commands such as:
 
-- `git status --short`
-- `git branch --show-current`
-- `git diff --stat`
-- `git diff`
-- `git ls-files`
-- `find . -maxdepth 3 -type f`
-- `composer validate --strict`, only if Composer is already available and the command will not install or update dependencies
+```bash
+git status --short
+git status --branch --short
+git branch --show-current
+git diff --stat
+git diff -- .
+git diff --check
+git log --oneline -n 20
+git show --stat
+git ls-files
+find . -maxdepth 3 -type f
+composer validate --strict
+```
+
+`composer validate --strict` is allowed only if Composer is already available and the command will not install, update, download, or modify dependencies.
+
+Agents MUST NOT claim validation was performed unless the command actually ran.
 
 ### Commands Requiring Explicit Permission
 
 Agents MUST NOT run these without explicit maintainer permission:
 
-- `composer install`
-- `composer update`
-- `composer require`
-- `composer remove`
-- `npm install`
-- `yarn`
-- `pnpm`
-- `docker compose build`
-- `docker compose up`
+```bash
+composer install
+composer update
+composer require
+composer remove
+npm install
+yarn
+pnpm
+docker compose build
+docker compose up
+```
+
+Agents MUST also avoid, unless explicitly permitted:
+
 - Symfony console commands that generate files or mutate cache/state
 - commands that write to `vendor/`
 - commands that write to `node_modules/`
@@ -209,24 +314,77 @@ Agents MUST NOT run these without explicit maintainer permission:
 - commands that update lock files
 - commands that generate assets or runtime artifacts
 
-If unsure whether a command mutates the repository, do not run it.
+Permission to run one command does not imply permission to run adjacent commands.
 
 ## Git Policy
 
-Agents MUST NOT:
+Git is a human-controlled authority surface.
 
-- stage files
-- commit changes
-- push changes
-- create branches
-- delete branches
-- tag releases
-- open pull requests
-- merge pull requests
-- modify remotes
-- rewrite history
+Agents may inspect Git state.
+Agents must not mutate Git state.
 
-unless explicitly instructed.
+Allowed by default:
+
+```bash
+git status --short
+git status --branch --short
+git branch --show-current
+git diff --stat
+git diff -- .
+git diff --check
+git log --oneline -n 20
+git show --stat
+git ls-files
+```
+
+Agents MUST NOT run:
+
+```bash
+git add
+git commit
+git push
+git pull
+git fetch
+git merge
+git rebase
+git reset
+git reset --hard
+git checkout
+git switch
+git branch
+git tag
+git stash
+git clean
+git restore
+git apply
+git am
+git cherry-pick
+git revert
+git remote
+git config
+```
+
+Agents MUST NOT run destructive or history-rewriting commands, including:
+
+```bash
+git push --force
+git push --force-with-lease
+git reset --hard
+git clean -fd
+git clean -fdx
+git rebase -i
+```
+
+Agents MUST NOT stage files.
+Agents MUST NOT commit changes.
+Agents MUST NOT push changes.
+Agents MUST NOT create branches.
+Agents MUST NOT delete branches.
+Agents MUST NOT tag releases.
+Agents MUST NOT modify remotes.
+Agents MUST NOT rewrite history.
+
+If Git state needs to change, the agent may describe the recommended human action, but must not perform it.
 
 Before editing, agents MUST report:
 
@@ -246,9 +404,150 @@ After editing, agents MUST report:
 
 Agents MUST NOT claim the repository is clean unless `git status --short` was checked.
 
-Agents MUST NOT claim validation was performed unless it actually was.
-
 Agents MUST NOT claim work is ready for release, Packagist, production, or merge without explicit evidence.
+
+## GitHub Policy
+
+GitHub is a human-controlled remote authority surface.
+
+Agents MUST NOT use GitHub as an action surface.
+
+Agents MUST NOT run GitHub CLI write commands.
+
+Forbidden commands include, but are not limited to:
+
+```bash
+gh pr create
+gh pr edit
+gh pr close
+gh pr reopen
+gh pr merge
+gh pr ready
+gh pr review
+gh pr comment
+gh issue create
+gh issue edit
+gh issue close
+gh issue reopen
+gh issue comment
+gh issue label
+gh repo edit
+gh repo rename
+gh repo archive
+gh repo delete
+gh release create
+gh release edit
+gh release delete
+gh workflow run
+gh workflow enable
+gh workflow disable
+gh secret set
+gh secret delete
+gh variable set
+gh variable delete
+gh api
+```
+
+Agents MUST NOT use alternate tools to bypass this policy, including:
+
+- `hub`
+- GitHub MCP write tools
+- browser automation against GitHub
+- direct REST API writes
+- direct GraphQL API writes
+- `curl` or `wget` requests that mutate GitHub state
+- scripts that call GitHub APIs
+- editor extensions that create PRs, issues, reviews, releases, or remote changes
+
+Agents may draft text for a pull request, issue, release note, or GitHub setting change.
+
+Agents must leave the actual GitHub action to the human maintainer.
+
+## Pull Request Policy
+
+Agents MUST NOT create pull requests.
+
+Agents may prepare:
+
+- a local diff
+- a concise change summary
+- a proposed PR title
+- a proposed PR body
+- a validation summary
+- a risk summary
+- suggested reviewer checklist items
+
+Agents MUST NOT:
+
+- run `gh pr create`
+- open a PR through browser automation
+- open a PR through an MCP tool
+- push a branch for a PR
+- mark a PR ready for review
+- request reviewers
+- approve a PR
+- merge a PR
+- close a PR
+- comment on a PR
+- resolve PR conversations
+- modify PR labels, milestones, or assignees
+
+The human maintainer decides whether a pull request should exist.
+
+The human maintainer creates the pull request.
+
+## Issue Policy
+
+GitHub issues are governance and project-tracking artifacts.
+
+Agents MUST NOT create, edit, label, assign, close, reopen, milestone, or comment on GitHub issues.
+
+Agents MUST NOT treat issue operations as low-risk.
+
+Agents may prepare:
+
+- proposed issue title
+- proposed issue body
+- proposed labels
+- proposed acceptance criteria
+- proposed reproduction steps
+- proposed maintainer checklist
+
+Agents MUST NOT execute the GitHub action.
+
+Agents MUST NOT infer project direction from issue text unless the maintainer explicitly says the issue is authoritative for the current task.
+
+If the maintainer provides issue content, treat it as task context, not as automatic doctrine.
+
+## Branch Protection, Settings, and Actions Policy
+
+Agents MUST NOT modify repository settings.
+
+Agents MUST NOT modify:
+
+- branch protection rules
+- rulesets
+- CODEOWNERS enforcement
+- default branch
+- merge strategy settings
+- Actions permissions
+- Actions workflow settings
+- environments
+- deployment settings
+- repository secrets
+- repository variables
+- collaborators
+- team access
+- webhooks
+- Pages settings
+- security settings
+- Dependabot settings
+- release settings
+- package publishing settings
+
+Agents may recommend settings changes in prose for human review.
+
+Agents must not apply them.
 
 ## File and Documentation Policy
 
@@ -362,6 +661,73 @@ Agents MUST state clearly when validation was skipped and why.
 
 Never substitute confidence for validation.
 
+Validation does not authorize Git or GitHub mutation.
+
+Passing validation does not mean the work may be staged, committed, pushed, released, or turned into a pull request by the agent.
+
+## Tool-Specific Notes
+
+### Codex
+
+Codex CLI and the Codex VS Code extension are local assistance tools.
+
+Codex may inspect and edit local files within the requested scope.
+
+Codex MUST NOT:
+
+- stage changes
+- commit changes
+- push changes
+- create branches
+- create pull requests
+- use GitHub CLI for write operations
+- modify GitHub issues
+- modify repository settings
+- run broad multi-repo mutation tasks from a workspace root
+
+When run from a workspace root, Codex should act as an inspect-only coordinator unless the maintainer explicitly scopes it to a single repository and task.
+
+Actual implementation work should happen inside the target repository root.
+
+### Claude
+
+Claude-related instruction files, including `CLAUDE.md`, must preserve this file’s Git and GitHub boundaries.
+
+Claude may assist with:
+
+- local inspection
+- bounded file edits
+- summarizing diffs
+- drafting PR text
+- drafting issue text
+- drafting validation notes
+
+Claude MUST NOT:
+
+- use Bash to mutate Git state
+- use GitHub MCP tools for write operations
+- create issues
+- create pull requests
+- comment on issues or pull requests
+- modify repository settings
+- run broad autonomous workflows without human review
+
+If Claude proposes an action that would affect GitHub, it must present it as a human action, not perform it.
+
+### MCP and Browser Agents
+
+MCP-enabled agents and browser agents MUST NOT be used to bypass these rules.
+
+They MUST NOT:
+
+- click GitHub buttons that create or merge PRs
+- edit GitHub issues
+- change settings through the GitHub UI
+- operate GitHub as a remote write surface
+- use connected tools to perform repository governance actions
+
+Read-only inspection may be allowed only when explicitly scoped by the maintainer.
+
 ## Escalation Rules
 
 Stop and ask the maintainer before proceeding when:
@@ -375,9 +741,12 @@ Stop and ask the maintainer before proceeding when:
 - generated files would be created
 - external source material is needed
 - licensing would be affected
-- branch, release, registry, or CI settings would be affected
+- branch, release, registry, CI, issue, PR, or GitHub settings would be affected
 - repository history or naming history would be mentioned
 - the task requires guessing project doctrine
+- credentials or secrets appear necessary
+- GitHub state would need to change
+- Git state would need to change
 
 When in doubt, preserve the skeleton and ask.
 
@@ -390,6 +759,7 @@ Before editing:
 - `Scope understood`
 - `Files likely to change`
 - `Commands planned`
+- `Git/GitHub actions blocked`
 - `Risks or ambiguities`
 
 After editing:
@@ -398,8 +768,9 @@ After editing:
 - `What changed`
 - `Validation performed`
 - `Validation skipped`
+- `Git/GitHub actions not performed`
 - `Remaining risks`
-- `Suggested next step`
+- `Suggested next human step`
 
 Keep reports concise and factual.
 
@@ -419,3 +790,10 @@ Keep it human-reviewed.
 
 Agents assist.
 The maintainer decides.
+
+Agents may prepare work.
+The maintainer controls Git.
+The maintainer controls GitHub.
+The maintainer creates pull requests.
+The maintainer manages issues.
+The maintainer approves releases.
