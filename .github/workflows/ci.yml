@@ -15,9 +15,7 @@ jobs:
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: '8.4'
-      # Not --strict: the seed legitimately carries flex-require, which the
-      # strict publish schema rejects; the real oracle is create-project below.
-      - run: composer validate --no-check-publish
+      - run: composer validate --strict
       - name: create-project end to end
         run: |
           cd "$RUNNER_TEMP"

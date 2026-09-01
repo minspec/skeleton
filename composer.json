@@ -18,17 +18,15 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "symfony/flex": "^2"
-    },
-    "flex-require": {
-        "symfony/console": "*",
-        "symfony/dotenv": "*",
-        "symfony/framework-bundle": "*",
-        "symfony/runtime": "*",
-        "symfony/yaml": "*"
+        "php": ">=8.4",
+        "symfony/console": "8.1.*",
+        "symfony/dotenv": "8.1.*",
+        "symfony/flex": "^2",
+        "symfony/framework-bundle": "8.1.*",
+        "symfony/runtime": "8.1.*",
+        "symfony/yaml": "8.1.*"
     },
     "require-dev": {},
     "config": {
