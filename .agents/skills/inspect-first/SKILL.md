@@ -21,7 +21,7 @@ Build a grounded view of the repository before acting. Do not infer repository s
 - Do not run Symfony commands.
 - Do not run Docker builds.
 - Do not generate local artifacts.
-- Do not stage, commit, push, merge, tag, or release.
+- Do not stage, commit, or push outside a task the maintainer directed (see AGENTS.md, maintainer-directed lane). Never merge, tag, or release.
 - Do not create broad refactors when the user asked for a bounded change.
 - Do not revive old retired namespace language. If encountered, flag it as a cleanup issue.
 
