@@ -35,7 +35,7 @@ Make the smallest correct change that satisfies the user’s request while prese
 For `minspec/skeleton`, preserve the minimal skeleton purpose:
 
 - minimal Symfony application baseline
-- Symfony Docker / FrankenPHP / Caddy runtime baseline
+- the server runtime baseline lives in `minspec/docker`, not here
 - no database requirement by default
 - no default UX/application layer
 - no Workbench implementation

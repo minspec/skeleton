@@ -20,9 +20,14 @@ It does not own:
 
 - Docker Compose files
 - Dockerfiles
-- Caddy or FrankenPHP runtime configuration
+- server runtime configuration
 - Docker entrypoints
 - first-run Docker bootstrap behavior
+
+Those belong in `minspec/docker`.
+
+## Contribution posture
+
 Public visibility does not imply public governance, public write access, or an open contribution process. During incubation, source mutation authority remains deliberately restricted to the maintainer and explicitly trusted collaborators.
 
 Pull requests are enabled but restricted to collaborators only. Only users with repository write, maintain, or admin access may open pull requests.
@@ -34,8 +39,6 @@ Issues, security reports, reproducible bug reports, documentation clarity sugges
 Unsolicited external PRs are not part of the accepted source path during incubation.
 
 AI agents, GitHub Apps, bots, automation, Dependabot, Copilot agents, browser agents, and external tools are not maintainers and do not gain source authority from collaborator-only PR settings.
-
-Those belong in `minspec/docker`.
 
 ## Intent
 
